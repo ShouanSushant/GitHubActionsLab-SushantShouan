@@ -1,0 +1,54 @@
+name: pr - multi os
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: os info
+        run: |
+          uname -a
+          cat /etc/os-release
+      - name: make file
+        run: |
+          echo "hello from ubuntu" > os-note.txt
+          echo "user=$(whoami) date=$(date)" >> os-note.txt
+          cat os-note.txt
+
+  macos:
+    runs-on: macos-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: os info
+        run: |
+          uname -a
+          sw_vers
+      - name: make file
+        run: |
+          echo "hello from macos" > os-note.txt
+          echo "user=$(whoami) date=$(date)" >> os-note.txt
+          cat os-note.txt
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: os info
+        shell: pwsh
+        run: |
+          $PSVersionTable
+          (Get-CimInstance Win32_OperatingSystem).Caption
+          systeminfo | Select-String 'OS Name|OS Version' | ForEach-Object { $_.Line }
+      - name: make file
+        shell: pwsh
+        run: |
+          "hello from windows" | Out-File os-note.txt -Encoding utf8
+          "user=$env:USERNAME date=$(Get-Date)" | Out-File os-note.txt -Append -Encoding utf8
+          Get-Content os-note.txt

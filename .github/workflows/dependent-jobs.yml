@@ -1,0 +1,48 @@
+name: ci - build test deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: build msg
+        run: echo "building app..."
+      - name: fake build
+        run: |
+          echo "install stuff"
+          sleep 2
+          echo "compile done"
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: test msg
+        run: echo "running tests..."
+      - name: fake tests
+        run: |
+          echo "unit tests ok"
+          sleep 1
+          echo "integration tests ok"
+          sleep 1
+          echo "all good"
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: start deploy
+        run: echo "deploying..."
+      - name: fake deploy
+        run: |
+          echo "package"
+          sleep 1
+          echo "ship it"
+          echo "done"
